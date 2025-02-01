@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Draggable } from "@/components/ui/draggable";
 import { Input } from "@/components/ui/input";
 import { LucideIcon } from "lucide-react";
 
@@ -31,10 +32,10 @@ export type Component = {
 };
 
 const FormComponent = (props: Component) => {
-  const { label, Icon } = props;
+  const { label, Icon, id, type } = props;
 
   return (
-    <>
+    <Draggable id={id} data={{ type, id }}>
       <Card className="cursor-pointer hover:bg-slate-100">
         <CardHeader>
           <Icon size={24} />
@@ -44,6 +45,6 @@ const FormComponent = (props: Component) => {
           <h3 className="text-xl">{label}</h3>
         </CardContent>
       </Card>
-    </>
+    </Draggable>
   );
 };

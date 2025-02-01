@@ -42,8 +42,8 @@ type FieldGeneratorProps = {
   form: UseFormReturn<any>;
 };
 
-export const FieldGenerator = (props: FieldGeneratorProps) => {
-  const { form, field } = props;
+const FieldGenerator = (props: FieldGeneratorProps) => {
+  const { form, field, mode } = props;
   const { type, name } = field;
   const control = form.control;
 
@@ -68,7 +68,7 @@ export const FieldGenerator = (props: FieldGeneratorProps) => {
               <FormMessage className="text-red-500" />
             </FormItem>
           )}
-        ></FormField>
+        />
       );
 
     case "select":
@@ -97,14 +97,20 @@ export const FieldGenerator = (props: FieldGeneratorProps) => {
 export const FieldsGenerator = (props: {
   fields: Field[];
   form: UseFormReturn<any>;
+  mode: "edit" | "view";
 }) => {
-  const { fields, form } = props;
+  const { fields, form, mode } = props;
 
   return (
     <>
       <DevTool control={form.control} />
       {fields.map((field) => (
-        <FieldGenerator key={field.name} field={field} form={form} />
+        <FieldGenerator
+          key={field.name}
+          field={field}
+          form={form}
+          mode={mode}
+        />
       ))}
     </>
   );
