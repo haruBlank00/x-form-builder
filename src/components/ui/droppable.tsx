@@ -4,7 +4,7 @@ export const Droppable = ({
   children,
   id,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   id: string;
 }) => {
   const { isOver, setNodeRef } = useDroppable({
@@ -16,7 +16,7 @@ export const Droppable = ({
 
   return (
     <div ref={setNodeRef} style={style}>
-      {children}
+      {children || null}
     </div>
   );
 };

@@ -94,7 +94,7 @@ const FieldGenerator = (props: FieldGeneratorProps) => {
   }
 };
 
-export const FieldsGenerator = (props: {
+export const XFieldsGenerator = (props: {
   fields: Field[];
   form: UseFormReturn<any>;
   mode: "edit" | "view";

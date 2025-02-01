@@ -8,6 +8,7 @@ export const FORM_COMPONENTS: Component[] = [
     label: "Text",
     type: "text",
     Icon: Pencil,
+    placeholder: "Enter text",
   },
   {
     id: makeID(),
