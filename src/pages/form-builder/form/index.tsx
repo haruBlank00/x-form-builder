@@ -1,30 +1,53 @@
-import { FORM_COMPONENTS } from "@/data/form-components";
-import { FormComponents } from "./components/form-components";
-import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { FORM_FIELD_OPTIONS } from "@/data/form-field-options";
+import { FormFieldOptions } from "./components/form-components";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { FormOutput } from "./components/form-output";
 import { useEffect, useReducer } from "react";
 import { formReducer, initialState } from "./form-reducer";
 import { makeID } from "@/lib/utils";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 export default function FormPage() {
   const [state, dispatch] = useReducer(formReducer, initialState);
-
-  const onDragStart = (e: DragStartEvent) => {
-    console.log({ e }, "started...");
-  };
 
   const onDragEnd = (e: DragEndEvent) => {
     const currentData = e.active?.data.current!;
 
     // we will need unique name for each field so let's add it here :)
     const name = `${currentData.type}-${makeID()}`;
+
+    const payload = {
+      ...currentData,
+      name,
+    };
+
+    console.log("*** PAYLOAD ***", { payload });
+
     dispatch({
       type: "ADD_FIELD",
-      payload: {
-        ...currentData,
-        name,
-      },
+      payload,
     });
+  };
+
+  const onSortEnd = (e: DragEndEvent) => {
+    const activeId = e.active.id;
+    const overId = e.over?.id;
+    console.log({ activeId, overId });
+
+    if (!overId) return;
+
+    if (activeId !== overId) {
+      dispatch({
+        type: "SORT_FIELD",
+        payload: {
+          activeId,
+          overId,
+        },
+      });
+    }
   };
 
   useEffect(() => {
@@ -32,14 +55,21 @@ export default function FormPage() {
   }, [state]);
 
   return (
-    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+    <DndContext onDragEnd={onDragEnd}>
       <div className="grid grid-cols-12 gap-4">
         <div className="sm:col-span-12 md:col-span-2">
-          <FormComponents components={FORM_COMPONENTS} />
+          <FormFieldOptions fields={FORM_FIELD_OPTIONS} />
         </div>
 
         <div className="sm:col-span-12 md:col-span-5 border-4 border-dotted border-purple-400">
-          <FormOutput fields={state.present} />
+          <DndContext onDragEnd={onSortEnd}>
+            <SortableContext
+              items={state.present}
+              strategy={verticalListSortingStrategy}
+            >
+              <FormOutput fields={state.present} />
+            </SortableContext>
+          </DndContext>
         </div>
 
         <div className="sm:col-span-12 md:col-span-5">

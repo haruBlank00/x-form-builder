@@ -1,20 +1,23 @@
 import { makeID } from "@/lib/utils";
-import { Component } from "@/pages/form-builder/form/components/form-components";
+import { Field } from "@/pages/form-builder/form/components/form-components";
 import { Pencil, Calendar, Hash, Phone, AtSign, List } from "lucide-react";
 
-export const FORM_COMPONENTS: Component[] = [
+export const FORM_FIELD_OPTIONS: Field[] = [
   {
     id: makeID(),
+    Icon: Pencil,
+
     label: "Text",
     type: "text",
-    Icon: Pencil,
-    placeholder: "Enter text",
+    placeholder: "anything goes here...",
   },
   {
     id: makeID(),
+    Icon: AtSign,
+
     label: "Email",
     type: "email",
-    Icon: AtSign,
+    placeholder: "johndoe@xcenter.com",
   },
   //{
   //  id: makeID(),
@@ -27,6 +30,7 @@ export const FORM_COMPONENTS: Component[] = [
     label: "Number",
     type: "number",
     Icon: Hash,
+    placeholder: "1111",
   },
   //{
   //  id: makeID(),
