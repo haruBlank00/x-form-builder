@@ -4,6 +4,8 @@ import { DashboardLayout } from "../components/layouts/dashboard";
 
 const HomePage = lazy(() => import("./home"));
 const DashboardPage = lazy(() => import("./dashboard"));
+const FormBuilderPage = lazy(() => import("./form-builder"));
+const FormPage = lazy(() => import("./form-builder/form"));
 
 export default function XRouters() {
   return (
@@ -14,6 +16,12 @@ export default function XRouters() {
 
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+
+            <Route path="/form-builder">
+              <Route index element={<FormBuilderPage />} />
+
+              <Route path="create" element={<FormPage />} />
+            </Route>
           </Route>
         </Routes>
       </Suspense>
