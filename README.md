@@ -1,50 +1,66 @@
-# React + TypeScript + Vite
+# X-Form-Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- wokeeyyy. Let's make a form builder :)
 
-Currently, two official plugins are available:
+## Core req
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Form builder interface
+  - DnD for form fields
+  - [Sidebar for form elements | UI for my Form Previer | Config for form elements]
+  - Configs to support
+    - Labels, placeholder, validation rules and required / optional status
+  - support single / two coulmns layouts (let's use grid to make it easy)
 
-## Expanding the ESLint configuration
+- Form preview and testing
+  - Preview mode which the end users will see
+  - form validation? html elements have built in validation we can such as
+    email, number, etc
+    should I support other custom validations?
+  - support test mode to test the form submission
+    - and ui to display submitted data
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Data management and API integration
+  - create a mock api service to save and retrive form configurations
+  - proper error handling for API calls
+  - save / draft mode
+  - form analytics showing submission counts and validation failure rates? (backend?)o
 
-- Configure the top-level `parserOptions` property like this:
+- Responsive Design and UE
+  - works on different screen sizes
+  - ui/ux
+  - dnd operation feedback
+  - loading state and error messages for async operations
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- For sharing and management
+  - generate sharable link for create forms
+  - dashboard showing all created forms and their status
+  - allow forms to be duplicated, archived or deleted
+  - include basic form submission analytics
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Technical Req
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- State management
+  - implement undo / redo
+  - form validation logic
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- Routing and navigation
+  - react router
+  - protected routes (wait we need  to implement auth?)
+  - deep linking to specific forms and forms sections
+
+- Code organization
+  - component based arc
+  - typescript <3
+  - documentation
+
+- Performance
+  - lazy loading for form elements
+  - optimize rendering
+  - handle form submission
+
+### How should I start?
+
+- let's setup react router (v7 library only), shadcn, dnd etc
+- let's install all necessary shad components and libraries
+  and think what to do :3
+- tailwind@v4 breaks shadcn for now so lets opt for v3 now
