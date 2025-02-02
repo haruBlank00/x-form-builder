@@ -1,4 +1,5 @@
 import { swapArrayElements } from "@/lib/utils";
+import { Field } from "@/types";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { produce } from "immer";
 
@@ -10,7 +11,7 @@ export const initialState = {
 
 type AddAction = {
   type: "ADD_FIELD";
-  payload: any;
+  payload: Field;
 };
 
 type SortAction = {
@@ -21,18 +22,24 @@ type SortAction = {
   };
 };
 
-type Action = AddAction | SortAction;
+type UpdateAction = {
+  type: "UPDATE_FIELD";
+  payload: Field;
+};
+
+export type Action = AddAction | SortAction | UpdateAction;
 
 type State = {
-  past: any[];
-  present: any[];
-  future: any[];
+  past: Field[];
+  present: Field[];
+  future: Field[];
 };
 
 export const formReducer = (state: State, action: Action) =>
   produce(state, (draft) => {
     switch (action.type) {
       case "ADD_FIELD":
+        console.log({ action });
         draft.past.push(draft.present);
         draft.present.push(action.payload);
         draft.future = [];
@@ -46,7 +53,6 @@ export const formReducer = (state: State, action: Action) =>
         const overIndex = draft.present.findIndex(
           (field) => field.name === overId,
         );
-        console.log({ activeIndex, overIndex });
 
         draft.present = swapArrayElements(
           draft.present,
@@ -55,17 +61,16 @@ export const formReducer = (state: State, action: Action) =>
         );
         break;
 
-      //case "UPDATE_FIELD":
-      //  draft.past.push(draft.present);
-      //  const index = draft.present.findIndex(
-      //    (field) => field.id === action.payload.id,
-      //  );
-      //  if (index !== -1) {
-      //    draft.present[index] = { ...draft.present[index], ...action.payload };
-      //  }
-      //  draft.future = [];
-      //  break;
-      //
+      case "UPDATE_FIELD":
+        const fieldIndex = draft.present.findIndex((field) => {
+          return field.name === action.payload.name;
+        });
+
+        draft.present[fieldIndex] = {
+          ...draft.present[fieldIndex],
+          ...action.payload,
+        };
+        break;
       //case "UNDO":
       //  if (draft.past.length > 0) {
       //    draft.future.unshift(draft.present);

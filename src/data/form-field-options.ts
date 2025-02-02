@@ -1,15 +1,14 @@
 import { makeID } from "@/lib/utils";
-import { Field } from "@/pages/form-builder/form/components/form-components";
-import { Pencil, Calendar, Hash, Phone, AtSign, List } from "lucide-react";
+import { Field, FieldOption } from "@/types";
+import { Pencil, Hash, AtSign } from "lucide-react";
 
-export const FORM_FIELD_OPTIONS: Field[] = [
+export const FORM_FIELD_OPTIONS: FieldOption[] = [
   {
     id: makeID(),
     Icon: Pencil,
 
     label: "Text",
     type: "text",
-    placeholder: "anything goes here...",
   },
   {
     id: makeID(),
@@ -17,32 +16,37 @@ export const FORM_FIELD_OPTIONS: Field[] = [
 
     label: "Email",
     type: "email",
-    placeholder: "johndoe@xcenter.com",
   },
-  //{
-  //  id: makeID(),
-  //  label: "Date",
-  //  type: "date",
-  //  Icon: Calendar,
-  //},
   {
     id: makeID(),
     label: "Number",
     type: "number",
     Icon: Hash,
-    placeholder: "1111",
   },
-  //{
-  //  id: makeID(),
-  //  label: "Phone Number",
-  //  type: "tel",
-  //  Icon: Phone,
-  //},
-  //{
-  //  id: makeID(),
-  //  label: "Select",
-  //  type: "select",
-  //  Icon: List,
-  //  options: ["Option 1", "Option 2", "Option 3"], // Example options for the select field
-  //},
+];
+
+export const INPUT_FIELD_CONFIGS: Field[] = [
+  {
+    id: makeID(),
+    type: "text",
+    label: "Label",
+    placeholder: "Enter your field label",
+    required: true,
+    name: "label",
+  },
+  {
+    id: makeID(),
+    type: "text",
+    label: "Placeholder",
+    placeholder: "Enter your field placeholder",
+    required: true,
+    name: "placeholder",
+  },
+  {
+    id: makeID(),
+    type: "checkbox",
+    label: "Is this field required?",
+    required: true,
+    name: "required",
+  },
 ];

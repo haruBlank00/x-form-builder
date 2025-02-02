@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Draggable } from "@/components/ui/draggable";
 import { Input } from "@/components/ui/input";
-import { LucideIcon } from "lucide-react";
+import { FieldOption } from "@/types";
 
 type FormFieldOptionsProps = {
-  fields: Field[];
+  fields: FieldOption[];
 };
 
 export const FormFieldOptions = ({ fields }: FormFieldOptionsProps) => {
@@ -24,16 +24,7 @@ export const FormFieldOptions = ({ fields }: FormFieldOptionsProps) => {
   );
 };
 
-export type Field = {
-  id: string;
-  label: string;
-  type: "text" | "email" | "password" | "number" | "textarea";
-  Icon: LucideIcon;
-  placeholder?: string;
-  required?: boolean;
-};
-
-const FormFieldOption = (props: Field) => {
+const FormFieldOption = (props: FieldOption) => {
   const { Icon, ...rest } = props;
 
   return (

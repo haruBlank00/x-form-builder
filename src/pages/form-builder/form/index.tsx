@@ -2,29 +2,37 @@ import { FORM_FIELD_OPTIONS } from "@/data/form-field-options";
 import { FormFieldOptions } from "./components/form-components";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { FormOutput } from "./components/form-output";
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { formReducer, initialState } from "./form-reducer";
 import { makeID } from "@/lib/utils";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Field, FieldOption } from "@/types";
+import { FormConfig } from "./components/form-config";
 
 export default function FormPage() {
   const [state, dispatch] = useReducer(formReducer, initialState);
+  const [selectedFieldId, setSelectedFieldId] = useState("");
 
   const onDragEnd = (e: DragEndEvent) => {
-    const currentData = e.active?.data.current!;
+    const { type } = e.active?.data.current! as FieldOption;
 
     // we will need unique name for each field so let's add it here :)
-    const name = `${currentData.type}-${makeID()}`;
+    const name = `${type}__${makeID()}`;
 
-    const payload = {
-      ...currentData,
+    const payload: Field = {
       name,
+      type,
+      label: "Customize your label",
+      placeholder: "Customize your placeholder",
+      required: false,
     };
 
     console.log("*** PAYLOAD ***", { payload });
+
+    setSelectedFieldId(name);
 
     dispatch({
       type: "ADD_FIELD",
@@ -35,7 +43,6 @@ export default function FormPage() {
   const onSortEnd = (e: DragEndEvent) => {
     const activeId = e.active.id;
     const overId = e.over?.id;
-    console.log({ activeId, overId });
 
     if (!overId) return;
 
@@ -52,7 +59,16 @@ export default function FormPage() {
 
   useEffect(() => {
     console.info("*** FORM STATE ***", { state });
+    console.info("*** SELECTED FIELD ID ***", { selectedFieldId });
   }, [state]);
+
+  const selectedField: Field | undefined = useMemo(() => {
+    const field = state.present.find(
+      (field: Field) => field.name === selectedFieldId,
+    );
+
+    return field;
+  }, [selectedFieldId]);
 
   return (
     <DndContext onDragEnd={onDragEnd}>
@@ -67,13 +83,20 @@ export default function FormPage() {
               items={state.present}
               strategy={verticalListSortingStrategy}
             >
-              <FormOutput fields={state.present} />
+              <FormOutput
+                fields={state.present}
+                setSelectedFieldId={setSelectedFieldId}
+              />
             </SortableContext>
           </DndContext>
         </div>
 
         <div className="sm:col-span-12 md:col-span-5">
-          <h2>config</h2>
+          <FormConfig
+            selectedField={selectedField}
+            dispatch={dispatch}
+            presentState={state.present}
+          />
         </div>
       </div>
     </DndContext>

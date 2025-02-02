@@ -9,20 +9,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DevTool } from "@hookform/devtools";
-import { Field } from "@/pages/form-builder/form/components/form-components";
 import { SortableItem } from "../ui/sortable-items";
+import { Field } from "@/types";
 
 type FieldGeneratorProps = {
-  field: {
-    name: string;
-  } & Field;
+  field: Field;
 
   form: UseFormReturn<any>;
   mode: "edit" | "view";
+  onFieldClick?: (fieldId: string) => void;
 };
 
+const inputTypes = ["text", "email", "number"];
+
 const FieldGenerator = (props: FieldGeneratorProps) => {
-  const { form, field: formField, mode } = props;
+  const { form, field: formField, mode, onFieldClick } = props;
   const { type, name } = formField;
   const control = form.control;
 
@@ -34,12 +35,35 @@ const FieldGenerator = (props: FieldGeneratorProps) => {
       control={control}
       name={name}
       render={({ field }) => {
-        if (["text", "email", "number"].includes(type)) {
-          const toRender = (
-            <FormItem>
-              <FormLabel>{formField.label}</FormLabel>
+        if (type === "checkbox") {
+          return (
+            <FormItem className="flex gap-4">
+              <FormLabel className="flex-1" htmlFor={name}>
+                {formField.label}
+              </FormLabel>
               <FormControl>
-                <Input {...field} type={type} />
+                <Input {...field} type={type} id={name} />
+              </FormControl>
+              <FormMessage className="text-red-500" />
+            </FormItem>
+          );
+        }
+
+        if (inputTypes.includes(type)) {
+          console.log({ field });
+          const toRender = (
+            <FormItem onClick={() => onFieldClick?.(formField.id)}>
+              <FormLabel className="flex gap-2">
+                {formField.label}
+                {formField.required && <span className="text-red-500">*</span>}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type={type}
+                  placeholder={formField.placeholder}
+                  required={formField.required}
+                />
               </FormControl>
               <FormMessage className="text-red-500" />
             </FormItem>
@@ -58,11 +82,14 @@ const FieldGenerator = (props: FieldGeneratorProps) => {
   );
 };
 
-export const XFieldsGenerator = (props: {
+type XFieldsGeneratorProps = {
   fields: (Field & { name: string })[];
   form: UseFormReturn<any>;
   mode: "edit" | "view";
-}) => {
+  onFieldClick?: (fieldId: string) => void;
+};
+
+export const XFieldsGenerator = (props: XFieldsGeneratorProps) => {
   const { fields, form, mode } = props;
 
   return (
