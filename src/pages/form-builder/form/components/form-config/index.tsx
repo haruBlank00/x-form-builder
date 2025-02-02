@@ -34,9 +34,10 @@ export const FormConfig = (props: Props) => {
   useEffect(() => {
     if (!selectedField) return;
 
-    const subscription = form.watch((value, { name, type }) => {
+    const subscription = form.watch((value) => {
       const { label = "", placeholder = "", required = false } = value;
 
+      // TODO: make payload based on field type
       const payload: Field = {
         ...selectedField,
         label,

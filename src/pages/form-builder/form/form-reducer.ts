@@ -4,9 +4,9 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 import { produce } from "immer";
 
 export const initialState = {
-  past: [],
-  present: [],
-  future: [],
+  past: [] as Field[][],
+  present: [] as Field[],
+  future: [] as Field[][],
 };
 
 type AddAction = {
@@ -33,29 +33,35 @@ type DeleteAction = {
     fieldId: string;
   };
 };
+
+type UndoAction = { type: "UNDO" };
+type RedoAction = { type: "REDO" };
+
 export type FormReducerAction =
   | AddAction
   | SortAction
   | UpdateAction
-  | DeleteAction;
+  | DeleteAction
+  | UndoAction
+  | RedoAction;
 
 type State = {
-  past: Field[];
+  past: Field[][];
   present: Field[];
-  future: Field[];
+  future: Field[][];
 };
 
 export const formReducer = (state: State, action: FormReducerAction) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case "ADD_FIELD":
-        console.log({ action });
-        draft.past.push(draft.present);
-        draft.present.push(action.payload);
-        draft.future = [];
+      case "ADD_FIELD": {
+        draft.past.push([...draft.present]); // Save current state to past
+        draft.present.push(action.payload); // Add new field
+        draft.future = []; // Clear future for valid redo
         break;
+      }
 
-      case "SORT_FIELD":
+      case "SORT_FIELD": {
         const { activeId, overId } = action.payload;
         const activeIndex = draft.present.findIndex(
           (field) => field.name === activeId,
@@ -64,47 +70,64 @@ export const formReducer = (state: State, action: FormReducerAction) =>
           (field) => field.name === overId,
         );
 
-        draft.present = swapArrayElements(
-          draft.present,
-          activeIndex,
-          overIndex,
+        if (activeIndex !== -1 && overIndex !== -1) {
+          draft.past.push([...draft.present]); // Save current state to past
+          draft.present = swapArrayElements(
+            draft.present,
+            activeIndex,
+            overIndex,
+          );
+          draft.future = []; // Clear future after sorting
+        }
+        break;
+      }
+
+      case "UPDATE_FIELD": {
+        const index = draft.present.findIndex(
+          (field) => field.name === action.payload.name,
         );
+
+        if (index !== -1) {
+          draft.past.push([...draft.present]); // Save current state to past
+          draft.present[index] = {
+            ...draft.present[index],
+            ...action.payload,
+          };
+          draft.future = []; // Clear future after update
+        }
         break;
+      }
 
-      case "UPDATE_FIELD":
-        const fieldIndex = draft.present.findIndex((field) => {
-          return field.name === action.payload.name;
-        });
+      case "DELETE_FIELD": {
+        const index = draft.present.findIndex(
+          (field) => field.name === action.payload.fieldId,
+        );
 
-        draft.present[fieldIndex] = {
-          ...draft.present[fieldIndex],
-          ...action.payload,
-        };
+        if (index !== -1) {
+          draft.past.push([...draft.present]); // Save current state to past
+          draft.present = draft.present.filter((_, i) => i !== index);
+          draft.future = []; // Clear future after deletion
+        }
         break;
+      }
 
-      case "DELETE_FIELD":
-        const index = draft.present.findIndex((field) => {
-          return field.name === action.payload.fieldId;
-        });
-
-        draft.past.push(draft.present);
-        draft.present = draft.present.filter((_, i) => {
-          return i !== index;
-        });
+      case "UNDO": {
+        if (draft.past.length > 0) {
+          const previous = draft.past.pop()!; // Get the last state from past
+          draft.future.unshift([...draft.present]); // Move current state to future
+          draft.present = previous; // Revert to the previous state
+        }
         break;
-      //case "UNDO":
-      //  if (draft.past.length > 0) {
-      //    draft.future.unshift(draft.present);
-      //    draft.present = draft.past.pop()!;
-      //  }
-      //  break;
-      //
-      //case "REDO":
-      //  if (draft.future.length > 0) {
-      //    draft.past.push(draft.present);
-      //    draft.present = draft.future.shift()!;
-      //  }
-      //  break;
+      }
+
+      case "REDO": {
+        if (draft.future.length > 0) {
+          const next = draft.future.shift()!; // Get the next state from future
+          draft.past.push([...draft.present]); // Move current state to past
+          draft.present = next; // Apply the next state
+        }
+        break;
+      }
 
       default:
         break;

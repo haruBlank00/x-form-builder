@@ -86,6 +86,7 @@ export default function FormPage() {
               <FormOutput
                 fields={state.present}
                 setSelectedFieldId={setSelectedFieldId}
+                dispatch={dispatch}
               />
             </SortableContext>
           </DndContext>
