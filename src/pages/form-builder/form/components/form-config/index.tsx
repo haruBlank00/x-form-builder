@@ -24,7 +24,7 @@ export const FormConfig = (props: Props) => {
   const noFieldSelected = !selectedField;
 
   useEffect(() => {
-    form.reset();
+    form.reset(selectedField);
   }, [selectedField?.name]);
 
   useEffect(() => {
