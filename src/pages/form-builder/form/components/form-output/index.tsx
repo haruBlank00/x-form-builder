@@ -15,18 +15,21 @@ export const FormOutput = (props: Props) => {
   const onFieldClick = (fieldId: string) => {
     setSelectedFieldId(fieldId);
   };
-  console.log({ fields }, "for output");
 
   return (
     <Droppable id="form-output">
-      <Form {...form}>
-        <XFieldsGenerator
-          fields={fields}
-          mode="edit"
-          form={form}
-          onFieldClick={onFieldClick}
-        />
-      </Form>
+      <div className="p-4">
+        <Form {...form}>
+          <div className="space-y-4">
+            <XFieldsGenerator
+              fields={fields}
+              mode="edit"
+              form={form}
+              onFieldClick={onFieldClick}
+            />
+          </div>
+        </Form>
+      </div>
     </Droppable>
   );
 };

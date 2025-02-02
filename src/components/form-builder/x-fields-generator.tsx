@@ -52,7 +52,7 @@ const FieldGenerator = (props: FieldGeneratorProps) => {
         if (inputTypes.includes(type)) {
           console.log({ field });
           const toRender = (
-            <FormItem onClick={() => onFieldClick?.(formField.id)}>
+            <FormItem>
               <FormLabel className="flex gap-2">
                 {formField.label}
                 {formField.required && <span className="text-red-500">*</span>}
@@ -70,7 +70,14 @@ const FieldGenerator = (props: FieldGeneratorProps) => {
           );
 
           if (isEditMode) {
-            return <SortableItem id={formField.name}>{toRender}</SortableItem>;
+            return (
+              <SortableItem
+                id={formField.name}
+                onClick={onFieldClick || (() => {})}
+              >
+                {toRender}
+              </SortableItem>
+            );
           }
 
           return toRender;
@@ -90,7 +97,7 @@ type XFieldsGeneratorProps = {
 };
 
 export const XFieldsGenerator = (props: XFieldsGeneratorProps) => {
-  const { fields, form, mode } = props;
+  const { fields, form, mode, onFieldClick } = props;
 
   return (
     <>
@@ -101,6 +108,7 @@ export const XFieldsGenerator = (props: XFieldsGeneratorProps) => {
           field={field}
           form={form}
           mode={mode}
+          onFieldClick={onFieldClick}
         />
       ))}
     </>
