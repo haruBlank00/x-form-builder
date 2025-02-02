@@ -94,6 +94,7 @@ export default function FormPage() {
         <div className="sm:col-span-12 md:col-span-5">
           <FormConfig
             selectedField={selectedField}
+            setSelectedFieldId={setSelectedFieldId}
             dispatch={dispatch}
             presentState={state.present}
           />

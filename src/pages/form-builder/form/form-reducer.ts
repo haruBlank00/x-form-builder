@@ -27,7 +27,17 @@ type UpdateAction = {
   payload: Field;
 };
 
-export type Action = AddAction | SortAction | UpdateAction;
+type DeleteAction = {
+  type: "DELETE_FIELD";
+  payload: {
+    fieldId: string;
+  };
+};
+export type FormReducerAction =
+  | AddAction
+  | SortAction
+  | UpdateAction
+  | DeleteAction;
 
 type State = {
   past: Field[];
@@ -35,7 +45,7 @@ type State = {
   future: Field[];
 };
 
-export const formReducer = (state: State, action: Action) =>
+export const formReducer = (state: State, action: FormReducerAction) =>
   produce(state, (draft) => {
     switch (action.type) {
       case "ADD_FIELD":
@@ -70,6 +80,17 @@ export const formReducer = (state: State, action: Action) =>
           ...draft.present[fieldIndex],
           ...action.payload,
         };
+        break;
+
+      case "DELETE_FIELD":
+        const index = draft.present.findIndex((field) => {
+          return field.name === action.payload.fieldId;
+        });
+
+        draft.past.push(draft.present);
+        draft.present = draft.present.filter((_, i) => {
+          return i !== index;
+        });
         break;
       //case "UNDO":
       //  if (draft.past.length > 0) {

@@ -1,14 +1,18 @@
 import { XFieldsGenerator } from "@/components/form-builder/x-fields-generator";
+import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { INPUT_FIELD_CONFIGS } from "@/data/form-field-options";
 import { Field } from "@/types";
+import { Trash2 } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { FormReducerAction } from "../../form-reducer";
 
 type Props = {
   selectedField: Field | undefined;
-  dispatch: React.Dispatch<any>;
-  presentState: any;
+  dispatch: React.Dispatch<FormReducerAction>;
+  presentState: Field[];
+  setSelectedFieldId: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const FormConfig = (props: Props) => {
@@ -49,6 +53,17 @@ export const FormConfig = (props: Props) => {
     return () => subscription.unsubscribe();
   }, [selectedField, dispatch, form]);
 
+  const onDelete = () => {
+    dispatch({
+      type: "DELETE_FIELD",
+      payload: {
+        fieldId: selectedField!.name,
+      },
+    });
+
+    props.setSelectedFieldId("");
+  };
+
   if (noFieldSelected) {
     return <h1>No field selected</h1>;
   }
@@ -64,6 +79,10 @@ export const FormConfig = (props: Props) => {
           form={form}
           fields={INPUT_FIELD_CONFIGS}
         />
+
+        <Button type="button" onClick={onDelete}>
+          <Trash2 /> Remove
+        </Button>
       </Form>
     </div>
   );
