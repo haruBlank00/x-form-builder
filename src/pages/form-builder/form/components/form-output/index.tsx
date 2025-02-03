@@ -3,10 +3,12 @@ import { Droppable } from "@/components/ui/droppable";
 import { Form } from "@/components/ui/form";
 import { XIf } from "@/components/ui/x-if";
 import { XTooltip } from "@/components/ui/x-tooltip";
-import { Redo2, Undo2 } from "lucide-react";
+import { Eye, Paperclip, Redo2, SaveIcon, Undo2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { FormReducerAction } from "../../form-reducer";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   setSelectedFieldId: Dispatch<SetStateAction<string>>;
@@ -47,13 +49,33 @@ export const FormOutput = (props: Props) => {
         </XIf>
 
         <Form {...form}>
-          <div className="space-y-4">
-            <XFieldsGenerator
-              fields={fields}
-              mode="edit"
-              form={form}
-              onFieldClick={onFieldClick}
-            />
+          <div className="flex flex-col">
+            <div className="space-y-4">
+              <XFieldsGenerator
+                fields={fields}
+                mode="edit"
+                form={form}
+                onFieldClick={onFieldClick}
+              />
+            </div>
+
+            <XIf condition={isNotEmpty}>
+              <Separator className="" />
+              <div>
+                <Button>
+                  <SaveIcon />
+                  Save
+                </Button>
+
+                <Button>
+                  <Paperclip /> Save as draft
+                </Button>
+
+                <Button>
+                  <Eye /> Preview
+                </Button>
+              </div>
+            </XIf>
           </div>
         </Form>
       </div>

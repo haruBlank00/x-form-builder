@@ -38,6 +38,7 @@ export const FormConfig = (props: Props) => {
       const { label = "", placeholder = "", required = false } = value;
 
       // TODO: make payload based on field type
+      // it will fix type error
       const payload: Field = {
         ...selectedField,
         label,
