@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { DashboardLayout } from "../components/layouts/dashboard";
+import { UserForm } from "./form";
 
 const HomePage = lazy(() => import("./home"));
 const DashboardPage = lazy(() => import("./dashboard"));
@@ -23,6 +24,8 @@ export default function XRouters() {
               <Route path=":formId" element={<FormPage />} />
             </Route>
           </Route>
+
+          <Route path="/form/:formId" element={<UserForm />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

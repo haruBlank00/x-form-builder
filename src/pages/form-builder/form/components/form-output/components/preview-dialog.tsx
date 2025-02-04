@@ -22,7 +22,7 @@ export const PreviewDialog = (props: { fields: Field[] }) => {
     resolver,
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = () => {
     toast.success("Form submitted successfully");
   };
 

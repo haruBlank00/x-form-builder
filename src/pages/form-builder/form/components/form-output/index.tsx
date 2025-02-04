@@ -3,7 +3,7 @@ import { Droppable } from "@/components/ui/droppable";
 import { Form } from "@/components/ui/form";
 import { XIf } from "@/components/ui/x-if";
 import { XTooltip } from "@/components/ui/x-tooltip";
-import { Eye, Paperclip, Redo2, SaveIcon, Undo2 } from "lucide-react";
+import { Paperclip, Redo2, SaveIcon, Undo2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { FormReducerAction } from "../../form-reducer";
@@ -55,8 +55,6 @@ export const FormOutput = (props: Props) => {
       },
     });
   };
-
-  const onPreview = () => {};
 
   return (
     <Droppable id="form-output">

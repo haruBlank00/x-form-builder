@@ -9,6 +9,7 @@ app.use(express.json());
 
 const DB: DB = {
   SAVED_FORMS: [],
+  SUBMITTED_FORMS: [],
 };
 
 // *** SAVE FORM IN DB ***
@@ -55,6 +56,34 @@ app.get(
   },
 );
 
+app.post("/form/:formId/submit", (req, res) => {
+  const values = req.body;
+  const formId = req.params.formId;
+
+  DB.SUBMITTED_FORMS.push({
+    formId,
+    ...values,
+  });
+
+  return res.json({
+    data: null,
+    error: null,
+    message: "Form submitted successfully",
+  });
+});
+
+app.get("/form/:formId", (req, res) => {
+  const { formId } = req.params;
+
+  const submittedForms = DB.SUBMITTED_FORMS.filter(
+    (form) => form.formId === formId,
+  );
+
+  console.log({ submittedForms });
+
+  return res.json({ data: submittedForms });
+});
+
 const PORT = 8888;
 
 app.listen(PORT, () => {
@@ -69,4 +98,8 @@ type Form = {
 
 type DB = {
   SAVED_FORMS: Form[];
+  SUBMITTED_FORMS: {
+    formId: string;
+    values: Record<string, any>;
+  }[];
 };

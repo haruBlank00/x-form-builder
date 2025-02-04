@@ -3,7 +3,7 @@ import { DEFAULT_VALUES, VALIDATORS } from "@/validators";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const generateDefaultNResolver = (fields: Field[]) => {
+export const generateDefaultNResolver = (fields: Field[] = []) => {
   const { validators, defaultValues } = fields.reduce<{
     defaultValues: Record<string, any>;
     validators: any;
