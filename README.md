@@ -2,6 +2,13 @@
 
 - wokeeyyy. Let's make a form builder :)
 
+## HOW TO RUN?
+
+- `npm run client` -> to start client
+- `npm run server` -> to start server
+
+Due to lack to time, I couldn't finish this project. :(
+
 ## Core req
 
 - Form builder interface
