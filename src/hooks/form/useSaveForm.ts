@@ -1,21 +1,19 @@
 import { xAxsios } from "@/lib/x-axios";
 import { ErrorResponse, SaveFormData, SuccessResponse } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+import { Field } from "react-hook-form";
 
 export const useSaveForm = () => {
   const mutation = useMutation<
-    SuccessResponse<SaveFormData & { id: string }>,
+    SuccessResponse<{
+      fields: Field[];
+      id: string;
+    }>,
     ErrorResponse,
     SaveFormData
   >({
     mutationKey: ["saveForm"],
-    mutationFn: async (data) =>
-      (
-        await xAxsios.post<SuccessResponse<SaveFormData & { id: string }>>(
-          "/form-builder/form",
-          data,
-        )
-      ).data,
+    mutationFn: async (data) => await xAxsios.post("/form-builder/form", data),
   });
 
   return {

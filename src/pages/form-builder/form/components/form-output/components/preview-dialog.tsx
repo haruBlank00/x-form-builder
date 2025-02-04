@@ -8,15 +8,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
+import { generateDefaultNResolver } from "@/lib/generate_default_&_resolver";
 import { Field } from "@/types";
 import { Eye } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const PreviewDialog = (props: { fields: Field[] }) => {
-  const form = useForm();
+  const { defaultValues, resolver } = generateDefaultNResolver(props.fields);
+  console.log({ defaultValues, resolver });
+  const form = useForm({
+    defaultValues,
+    resolver,
+  });
 
   const onSubmit = (data) => {
-    console.log("submitted", data);
+    toast.success("Form submitted successfully");
   };
 
   return (

@@ -49,6 +49,7 @@ export const FormOutput = (props: Props) => {
 
       onSuccess: (responseData) => {
         const { data, message } = responseData;
+        console.log({ data, message, responseData });
         toast.success(message);
         navigate(`/form-builder/form/${data?.id}`);
       },
