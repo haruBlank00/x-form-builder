@@ -13,6 +13,7 @@ import { useSaveForm } from "@/hooks/form/useSaveForm";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { Field } from "@/types";
+import { PreviewDialog } from "./components/preview-dialog";
 
 type Props = {
   setSelectedFieldId: Dispatch<SetStateAction<string>>;
@@ -54,6 +55,8 @@ export const FormOutput = (props: Props) => {
     });
   };
 
+  const onPreview = () => {};
+
   return (
     <Droppable id="form-output">
       <div className="p-4">
@@ -92,9 +95,7 @@ export const FormOutput = (props: Props) => {
                   <Paperclip /> Save as draft
                 </Button>
 
-                <Button>
-                  <Eye /> Preview
-                </Button>
+                <PreviewDialog fields={fields} />
               </div>
             </XIf>
           </div>
