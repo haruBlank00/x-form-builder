@@ -34,6 +34,11 @@ type DeleteAction = {
   };
 };
 
+type SetFieldsAction = {
+  type: "SET_FIELDS";
+  payload: Field[];
+};
+
 type UndoAction = { type: "UNDO" };
 type RedoAction = { type: "REDO" };
 
@@ -42,6 +47,7 @@ export type FormReducerAction =
   | SortAction
   | UpdateAction
   | DeleteAction
+  | SetFieldsAction
   | UndoAction
   | RedoAction;
 
@@ -108,6 +114,11 @@ export const formReducer = (state: State, action: FormReducerAction) =>
           draft.present = draft.present.filter((_, i) => i !== index);
           draft.future = []; // Clear future after deletion
         }
+        break;
+      }
+
+      case "SET_FIELDS": {
+        draft.present = action.payload;
         break;
       }
 

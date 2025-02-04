@@ -9,15 +9,21 @@ import { useForm } from "react-hook-form";
 import { FormReducerAction } from "../../form-reducer";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { useSaveForm } from "@/hooks/form/useSaveForm";
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
+import { Field } from "@/types";
 
 type Props = {
   setSelectedFieldId: Dispatch<SetStateAction<string>>;
-  fields: any[];
+  fields: Field[];
   dispatch: Dispatch<FormReducerAction>;
 };
 export const FormOutput = (props: Props) => {
   const { fields, setSelectedFieldId, dispatch } = props;
   const form = useForm();
+  const { saveForm, isSaving } = useSaveForm();
+  const navigate = useNavigate();
 
   const isNotEmpty = fields.length > 0;
 
@@ -31,6 +37,21 @@ export const FormOutput = (props: Props) => {
 
   const onRedo = () => {
     dispatch({ type: "REDO" });
+  };
+
+  const onSaveForm = () => {
+    saveForm(fields, {
+      onError: (error) => {
+        console.log({ error });
+        toast.error(error.message);
+      },
+
+      onSuccess: (responseData) => {
+        const { data, message } = responseData;
+        toast.success(message);
+        navigate(`/form-builder/form/${data?.id}`);
+      },
+    });
   };
 
   return (
@@ -62,7 +83,7 @@ export const FormOutput = (props: Props) => {
             <XIf condition={isNotEmpty}>
               <Separator className="" />
               <div>
-                <Button>
+                <Button disabled={isSaving} type="button" onClick={onSaveForm}>
                   <SaveIcon />
                   Save
                 </Button>

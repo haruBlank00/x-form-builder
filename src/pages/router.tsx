@@ -17,10 +17,10 @@ export default function XRouters() {
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
 
-            <Route path="/form-builder">
+            <Route path="/form-builder/form">
               <Route index element={<FormBuilderPage />} />
 
-              <Route path="create" element={<FormPage />} />
+              <Route path=":formId" element={<FormPage />} />
             </Route>
           </Route>
         </Routes>

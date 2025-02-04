@@ -11,9 +11,17 @@ import {
 } from "@dnd-kit/sortable";
 import { Field, FieldOption } from "@/types";
 import { FormConfig } from "./components/form-config";
+import { useParams } from "react-router";
+import { useGetForm } from "@/hooks/form/useGetForm";
 
 export default function FormPage() {
+  const params = useParams() as { formId: string };
+  const isEditPage = params?.formId !== "create";
+
+  const { form } = useGetForm(params.formId, isEditPage);
+
   const [state, dispatch] = useReducer(formReducer, initialState);
+
   const [selectedFieldId, setSelectedFieldId] = useState("");
 
   const onDragEnd = (e: DragEndEvent) => {
@@ -22,15 +30,13 @@ export default function FormPage() {
     // we will need unique name for each field so let's add it here :)
     const name = `${type}__${makeID()}`;
 
-    const payload: Field = {
+    const payload = {
       name,
       type,
       label: "Customize your label",
       placeholder: "Customize your placeholder",
       required: false,
-    };
-
-    console.log("*** PAYLOAD ***", { payload });
+    } as Field;
 
     setSelectedFieldId(name);
 
@@ -61,6 +67,19 @@ export default function FormPage() {
     console.info("*** FORM STATE ***", { state });
     console.info("*** SELECTED FIELD ID ***", { selectedFieldId });
   }, [state]);
+
+  useEffect(() => {
+    const fields = form?.data.fields || [];
+
+    console.log(fields, "fields ishere");
+
+    if (fields) {
+      dispatch({
+        type: "SET_FIELDS",
+        payload: fields || [],
+      });
+    }
+  }, [form?.data]);
 
   const selectedField: Field | undefined = useMemo(() => {
     const field = state.present.find(
